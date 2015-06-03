@@ -1,0 +1,113 @@
+---
+title: "4. Data Exploration"
+author: "Vineet Abraham"
+date: "May 16, 2015"
+output: html_document
+---
+
+This document will go over some of the basic functionality in R. It can be used in a couple of ways. You can press the **Knit HTML** button in the toolbar to view the entire document either in the viewer pane in the bottom-right of the RStudio interactive development environment (IDE) or in a separate HTML window. You can select the output type by pressing the down arrow to the right of the **Knit HTML** button. 
+![image_html](data_images/image_html.png)
+
+You can also run through the code in this document line-by-line by pressing the **Run** button, or chunk-by-chunk by pressing the **Chunks** button in the toolbar and then selecting **Run Next Chunk**.
+![image_html](data_images/image_run_chunk.png)
+
+These tutorial documents are meant to build upon each other so please make sure to review any earlier documents prior to starting this one.
+
+###Basic data exploration
+Let's use the car dataset from the previous tutorial.
+```{r}
+# Load the dataframe
+car <- read.csv("/home/radmin/Tutorials/data_images/cardata.csv")
+# Get an idea of what the data is about using the summary command.
+summary(car)
+str(car)
+# Check out the top 6 rows
+head(car)
+# Create a table comparing cylinders to mpg
+table(car$cylinders, car$mpg)
+# Nothing ground-breaking from the table above. We can definitely confirm that more cylinders = lower gas mileage.
+# Create a scatterplot matrix of all the variables minus car.name.
+pairs(car[,-which(colnames(car)=="car.name")])
+# The above plot helps us see the relationships between the different variables in the dataset. Some things to notice, there is a clear positive linear relationships between displacement and horsepower, and there is a negative relationship between mpg and horsepower.
+# If you want to compare two variables directly, you can use the plot() command.
+plot(car$displacement, car$horsepower, main = "Displacement vs HP")
+plot(car$mpg, car$horsepower, main = "MPG vs HP")
+# To see the actual correlation between two variables, use the cor() command. Correlation varies from -1 (high negative correlation) to 1 (high positive correlation).
+cor(car$displacement, car$horsepower)
+cor(car$mpg, car$horsepower)
+# Create histograms of various car data
+hist(car$cylinders)
+hist(car$mpg, (range(car$mpg)[2]-range(car$mpg)[1]))
+```
+
+You can also add your own variables to the dataframe
+```{r}
+# Let's add a new boolean variable that indicates whether the car has 8 cylinders or not.
+car$v8 <- car$cylinders >= 8
+# Let's separate the car weights into 3 bins, <= 3000 is small, >= 3001 and <= 4000 is medium, and > 4000 is large.
+car$weight_cat <- ifelse(car$weight<=3000, "small", 
+                         ifelse(car$weight<=4000, "medium", "large"))
+# New variables are automatically added to the end of a dataframe.
+str(car)
+```
+
+
+###More advanced plotting with ggplot2
+The ggplot2 package provides a lot of plotting functionality that is not available in standard R. We'll go over some commands below to see a little bit of what is possible. There a lot of great resources for ggplot2 on the web, [this is one of my favorites](http://docs.ggplot2.org/current/). Some of the content below has also been borrowed from here: http://www.statmethods.net/advgraphs/ggplot2.html.
+```{r}
+# The ggplot2 package should already be installed, if not, run install.packages("ggplot2")
+# Load the ggplot2 package
+library(ggplot2)
+# Instead of using the cars dataset, we'll use an internal R dataset called mtcars. Let's check out the dataset
+?mtcars
+summary(mtcars)
+str(mtcars)
+# Convert some of the variables to factors
+mtcars$cyl <- as.factor(mtcars$cyl)
+mtcars$vs <- as.factor(mtcars$vs)
+mtcars$am <- as.factor(mtcars$am)
+mtcars$gear <- as.factor(mtcars$gear)
+mtcars$carb <- as.factor(mtcars$carb)
+# Basic dot-plots
+qplot(mpg, hp, data = mtcars, main = "MPG vs HP")
+qplot(qsec, hp, data = mtcars, main = "Quarter Mile Time vs HP")
+# Adding color to the dot-plot for the hp variable
+qplot(qsec, hp, data = mtcars, color = hp, main = "Quarter Mile Time vs HP")
+# Alternating the shapes of the dot-plot data points by the variable "cyl"
+qplot(qsec, hp, data = mtcars, shape = cyl, main = "Quarter Mile Time vs HP")
+# Adding a smoothing line to dot-plots
+qplot(mpg, hp, data = mtcars, geom = c("point", "smooth"), main = "MPG vs HP")
+qplot(qsec, hp, data = mtcars, geom = c("point", "smooth"), main = "Quarter Mile Time vs HP")
+# Histogram
+qplot(carb, data = mtcars, geom = "histogram")
+# Density plot
+qplot(mpg, data = mtcars, geom = "density")
+# Frequency plot of mpg by number of cylinders
+qplot(mpg, data = mtcars, geom = "freqpoly", binwidth = 5,
+  color = as.factor(cyl))
+```
+
+The four plots below have been referenced from: http://www.statmethods.net/advgraphs/ggplot2.html.
+```{r}
+# Kernel density plots for mpg grouped by number of gears (indicated by color)
+qplot(mpg, data=mtcars, geom="density", fill=gear, alpha=I(.5), 
+   main="Distribution of Gas Mileage", xlab="Miles Per Gallon", 
+   ylab="Density")
+
+# Scatterplot of mpg vs. hp for each combination of gears and cylinders in each facet, transmission type is represented by shape and color
+qplot(hp, mpg, data=mtcars, shape=am, color=am, 
+   facets=gear~cyl, size=I(3),
+   xlab="Horsepower", ylab="Miles per Gallon") 
+
+# Separate regressions of mpg on weight for each number of cylinders
+qplot(wt, mpg, data=mtcars, geom=c("point", "smooth"), 
+   method="lm", formula=y~x, color=cyl, 
+   main="Regression of MPG on Weight", 
+   xlab="Weight", ylab="Miles per Gallon")
+
+# Boxplots of mpg by number of gears 
+# observations (points) are overlayed and jittered
+qplot(gear, mpg, data=mtcars, geom=c("boxplot", "jitter"), 
+   fill=gear, main="Mileage by Gear Number",
+   xlab="Number of Gears", ylab="Miles per Gallon")
+```

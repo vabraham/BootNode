@@ -1,0 +1,104 @@
+---
+title: "3. Dataframes"
+author: "Vineet Abraham"
+date: "April 16, 2015"
+output: html_document
+---
+
+This document will go over some of the basic functionality in R. It can be used in a couple of ways. You can press the **Knit HTML** button in the toolbar to view the entire document either in the viewer pane in the bottom-right of the RStudio interactive development environment (IDE) or in a separate HTML window. You can select the output type by pressing the down arrow to the right of the **Knit HTML** button. 
+![image_html](data_images/image_html.png)
+
+You can also run through the code in this document line-by-line by pressing the **Run** button, or chunk-by-chunk by pressing the **Chunks** button in the toolbar and then selecting **Run Next Chunk**.
+![image_html](data_images/image_run_chunk.png)
+
+These tutorial documents are meant to build upon each other so please make sure to review any earlier documents prior to starting this one.
+
+###Creating a dataframe from scratch
+Dataframes are at the core of data analysis in R. They differ from matrices in that each column can be of a different data type. Matrices generally contain only numeric values. They can be created in multiple ways. The most basic way to create a dataframe is using the data.frame() command. Check out the help function - ?data.frame, for additional details. Note that the number of rows must be the same for all columns in a matrix.
+```{r}
+# Create a sample dataframe of athlete data
+a.name <- c("Vin", "Mel", "Don", "Sal", "Sonny", "Arbita")
+a.age <- c(23, 31, 21, 27, 34, 24)
+a.height <- c(66, 69, 71, 70, 73, 71) #in inches
+a.weight <- c(160, 178, 155, 160, 180, 158)
+# Without specifying that a.sex is factor, R will automatically assume individual string characters.
+a.sex <- as.factor(c("male", "male", "male", "female", "male", "female"))
+# Combine all the vectors into a single dataframe
+df <- data.frame(a.name, a.age, a.height, a.weight, a.sex)
+# Print the dataframe
+df
+# Check out the dataframe class
+class(df)
+# Check out the class of the individual dataframe columns
+str(df)
+# See additional details about the dataframe using the summary() command
+summary(df)
+```
+Dataframes can also come from other sources. R has an internal library of dataframes to use.
+```{r}
+# List the internal library of R datasets
+data()
+```
+
+###Uploading a dataframe from a local source
+You can import dataframes directly from a local source. Under **Files** in the bottom-right panel, click **Upload** to upload files directly to the server. Files will automatically appear in the working directory of the RStudio server instance you are running. To check where that directory is, type `getwd()`. All the files you create and save will appear in this directory.
+
+![3_1](data_images/3_1.png)
+
+To read the data from the source file, you can use the read.table() command. Check out the help command `?read.table` for more information. There should be a file called "cardata.csv" in the working directory, you can load it into RStudio as follows.
+```{r}
+car <- read.csv("/home/radmin/Tutorials/data_images/cardata.csv")
+```
+The dataframe "car" should now appear in the global environment section of RStudio
+
+![3_2](data_images/3_2.png)
+
+###Importing dataframes from the internet
+You can import dataframes from the internet using the read.table() commands as well, just replace the local directory path with a url.
+```{r}
+# Load credit screening data from the UCI machine learning repository.
+url="http://archive.ics.uci.edu/ml/machine-learning-databases/credit-screening/crx.data"
+mydata=read.csv(url, header=FALSE)
+```
+
+###Exploring a dataframe
+Once you've loaded a dataframe, you can begin to explore to explore the data. We've looked at some of these commands above like `str()` and `summary()`.
+```{r}
+# Get a summary of the car dataset
+summary(car)
+# Display the data structure
+str(car)
+# Get the names of all the columns in the dataset
+names(car)
+# Display the first 6 rows of the dataframe
+head(car)
+# Display the last 6 rows of the dataframe
+tail(car)
+# Count the number of rows
+nrow(car)
+# Count the number of columns
+ncol(car)
+# View individual rows
+car[1,]
+car[2,]
+# View individual columns
+car[,1]
+car[,2]
+# You can also use the "$" and "tab" after the dataframe to view individual columns
+car$mpg
+car$cylinders
+```
+![3_3](data_images/3_3.png)
+```{r}
+# Selecting multiple rows
+car[1:4,]
+# Selecting multiple columns
+car[,1:2]
+# Selecting different rows
+car[c(1,3,4,6),]
+# Selecting different columns
+car[,c(1,3)]
+# Selecting individual elements of a dataframe
+car[1,1]
+car[1,"mpg"]
+```

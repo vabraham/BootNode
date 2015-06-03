@@ -1,0 +1,104 @@
+---
+title: "2. Vector and Matrices"
+author: "Vineet Abraham"
+date: "April 12, 2015"
+output: html_document
+---
+
+This document will go over some of the basic functionality in R. It can be used in a couple of ways. You can press the **Knit HTML** button in the toolbar to view the entire document either in the viewer pane in the bottom-right of the RStudio interactive development environment (IDE) or in a separate HTML window. You can select the output type by pressing the down arrow to the right of the **Knit HTML** button. 
+![image_html](data_images/image_html.png)
+
+You can also run through the code in this document line-by-line by pressing the **Run** button, or chunk-by-chunk by pressing the **Chunks** button in the toolbar and then selecting **Run Next Chunk**.
+![image_html](data_images/image_run_chunk.png)
+
+These tutorial documents are meant to build upon each other so please make sure to review any earlier documents prior to starting this one.
+
+###Vectors
+Vectors are defined in R using the following convention - vector_name <- c(x,y,z)
+```{r}
+weights_lb <- c(120, 130, 96, 230, 160, 143)
+heights_in <- c(60, 66, 72, 68, 59, 62)
+people <- c("James", "Molly", "Betsy", "Johnny", "Claris", "Xiaodi")
+bools <- c(TRUE, FALSE, TRUE, FALSE, NA, FALSE)
+# You can also create a sequential vector using the colon operator.
+seq_v <- 1:10
+# You can check the length of a vector using the "length" command.
+length(weights_lb)
+# Print the above vectors
+weights_lb
+heights_in
+people
+bools
+seq_v
+```
+Vector operations are performed element by element. See examples below.
+```{r}
+m1 <- c(1,2,3)
+m2 <- c(3,6,3)
+add_m <- m1 + m2
+# The first element of m1 is 1, the first element of m2 is 3, so the first element of add_m should be 4 (1+3). Element 2 of add_m should be 8, element 3 should be 6.
+add_m
+# All other vector operations are performed element by element as well.
+mul_m <- m1 * m2
+mul_m
+div_m <- m1 / m2
+div_m
+# Scalar operations to vectors are perfomed on each element of a vector. For example, if you multiply m1 by 2, each element of m1 would be multiplied by 2, and the output would be a new 3 element vector.
+scal <- 2 * m1
+scal
+```
+Vector element selection is performed using square brackets "[]".
+```{r}
+v1 <- c(1,4,2,98,5,63,3,53,2,45,6)
+v1
+# Select individual elements from v1
+v1[1]
+v1[2]
+# Select a range of elements in a vector using a colon ":"
+v1[1:5]
+# Select specific elements in a vector by defining a vector of elements within the square brackets. For example, if you want to select elements 3, 5, 6, and 8 from v1, perform the following:
+v1[c(3,5,6,8)]
+```
+
+
+###Matrices
+Matrices work similarly to vectors, the main difference is the parameter settings that are required to create them.
+```{r}
+mm1 <- matrix(
+  c(3,4,6,1,2,8,6,8,5),   # data elements of the matrix
+  nrow = 3,               # number of rows
+  ncol = 3,               # number of columns
+  byrow = TRUE)           # enter data into the matrix by row
+mm1
+# You can check the dimensions of a matrix using the "dim" command, where rows are first and columns are second.
+dim(mm1)
+```
+Matrix operations are performed element by element, just like vector operations. See examples below.
+```{r}
+mm2 <- matrix(
+  2,
+  nrow = 3,
+  ncol = 3)
+mm2
+# Add matrices
+mm3 <- mm1 + mm2
+mm3
+# Matrix multiplication is performed using the following operator "%*%". This is different from element by element multiplication which is performed using the "*" operator.
+mm4 <- mm1 %*% mm2
+mm4
+```
+Matrix element selection is performed using square brackets "[]", just like vector element selection. The difference is that since matrices are two-dimensional, element positions for each dimension must be given. See examples below.
+```{r}
+mm1
+# If we want to select the value in the third row and second column of matrix mm1, we perform the following command:
+mm1[3,2]
+# An entire row can be selected as follows: m[x,]
+mm1[3,]
+# An entire columns can be selected as follows: m[,y]
+mm1[,1]
+# Multiple rows/columns can be selected from a matrix by either defining a vector of rows/columns within the square brackets, or using a colon if the rows/columns selected are in order.
+# Select columns 1 and 3 of matrix mm1
+mm1[,c(1,3)]
+# Select rows 2 and 3 of matrix mm1
+mm1[2:3,]
+```

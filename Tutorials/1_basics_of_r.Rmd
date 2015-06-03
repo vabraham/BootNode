@@ -1,0 +1,124 @@
+---
+title: "1. Basics of R"
+author: "Vineet Abraham"
+date: "April 12, 2015"
+output: html_document
+---
+
+This document will go over some of the basic functionality in R. It can be used in a couple of ways. You can press the **Knit HTML** button in the toolbar to view the entire document either in the viewer pane in the bottom-right of the RStudio interactive development environment (IDE) or in a separate HTML window. You can select the output type by pressing the down arrow to the right of the **Knit HTML** button. 
+![image_html](data_images/image_html.png)
+
+You can also run through the code in this document line-by-line by pressing the **Run** button, or chunk-by-chunk by pressing the **Chunks** button in the toolbar and then selecting **Run Next Chunk**.
+![image_html](data_images/image_run_chunk.png)
+
+###Arithmetic Operations
+Standard arithmetic operators can be used as shown below.
+```{r}
+3+4
+5-2
+3*4
+12/2
+3^3
+```
+The quotient and remainder can be determined using the following operators respectively, "%/%" and "%%".
+```{r}
+13%/%5
+13%%5
+```
+
+
+###Assigning variables
+The preferred symbol to assign variables in R is "<-". You can also use the "=" symbol but normally it is used for setting parameters instead.
+```{r}
+red_marbles <- 12
+blue_marbles <- 21
+all_marbles <- red_marbles + blue_marbles
+all_marbles
+```
+Setting parameters example - in the "mean" function below, one of the parameters to set is "na.rm". The parameter "na.rm=TRUE" is used to remove NAs from the "mean" function. If the NAs were not removed from the dataset, the function would return NA.
+```{r}
+bag_1 <- 12
+bag_2 <- 21
+bag_3 <- NA
+bag_4 <- 31
+bag_5 <- 5
+all_bags <- c(bag_1, bag_2, bag_3, bag_4, bag_5)
+ave_bags <- mean(all_bags)
+ave_bags
+ave_bags <- mean(all_bags, na.rm=TRUE)
+ave_bags
+```
+
+
+###Boolean logic
+Boolean logic or true/false logic can be used in the following ways in R.
+
+* ">" greater than
+* "<" less than
+* "==" equal to
+* ">=" greater than or equal to
+* "<=" less than or equal to
+* "!=" does not equal to
+```{r}
+10 < 2
+10 > 9
+6 == 5
+12 >= 12
+12 <= 10
+1 != 2
+```
+
+
+###Basic data types
+There are 3 basic data-types in R: "Numeric", "Logical", and "Character".
+
+* Numerics are any number, they can be integers like "1" or rational numbers like "2.3".
+* Logicals are boolean values - TRUE, FALSE, or NA.
+* Characters are strings or text like "apples" or "oranges". Characters must be enclosed by either double-quotes "" or single-quotes ''.
+```{r}
+a_num1 <- 1
+a_num2 <- 2.3
+a_log1 <- TRUE
+a_char1 <- "apples"
+# Use the class() function to determine what the data type is for each variable defined above.
+class(a_num1)
+class(a_num2)
+class(a_log1)
+class(a_char1)
+```
+
+
+###The help function
+When you're stuck in R, a good resource is the help function. The help function can be called by prefixing a "?" in front of most functions. This brings up that function's documentation.
+```{r}
+# Bring up the help function for the "mean"" command.
+?mean
+# Bring up the help function for the "class" command.
+?class
+# Bring up the help function for the "matrix" command.
+?matrix
+```
+
+
+###Installing packages
+One of Rs greatest strengths is the ability to install external packages. Packages contain additional functionality that is not included in the standard installation of R. Packages can be installed and loaded very easily. Once a package is installed, it will remain in a local library and just needs to be loaded prior to use.
+```{r, eval=FALSE}
+# Check the local library for currently installed packages.
+library()
+# For example, if you want to install the "randomForest" package, you would execute the following:
+install.packages("randomForest")
+# Once a package has been installed, it must be loaded before it can be used.
+library(randomForest)
+# If you don't run into an error when using the library command above, your package should have loaded and installed successfully. You can also run the library() command to confirm that the package is installed.
+library()
+# If you want, you can also remove packages with the remove.package() command.
+remove.packages("randomForest")
+# Confirm that the package is no longer installed by checking the list with the library() command.
+library()
+```
+
+###Clearing the workspace
+To remove all the data and variables that have been loaded into a workspace in R, run the command rm(list=ls()).
+```{r}
+rm(list=ls())
+```
